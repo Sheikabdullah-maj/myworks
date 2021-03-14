@@ -1,0 +1,243 @@
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title pull-left">Product Info</h3>
+		<div class="custom-control custom-switch pull-right">
+			<input type="checkbox" class="custom-control-input" id="showAll"
+				(click)="showOrHideAllItemsPanel($event)"> <label
+				class="custom-control-label" for="showAll">Show All</label>
+		</div>
+
+	</div>
+
+	<div class="panel-body">
+		<div [style.display]="showItemLevel ? 'block' : 'none'"
+			id="itemLevelPanel">
+			<table class="table table-striped">
+				<tbody>
+					<tr>
+						<td colspan="1">
+
+							<div [hidden]="submitted">
+								<form (ngSubmit)="onSubmit()" #formOne="ngForm">
+									<div class="form-group">
+										<label for="code">Product Code</label> <input type="checkbox"
+											class="custom-control-input" id="isNewProduct"
+											name="isNewProduct" (change)="newProductCheck($event)"
+											[checked]="isNewProduct"> <label
+											class="custom-control-label" for="isNewProduct">Setup
+											for New Product</label>
+										<!-- <input type="number" class="form-control" id="code" required name="code"> -->
+										<input id="code" name="code" type="text" class="form-control"
+											[ngbTypeahead]="productSearch" [resultTemplate]="rt"
+											[inputFormatter]="formatter"
+											[(ngModel)]="selectedProduct.code"
+											(change)='getProductById($event)' [disabled]="isNewProduct" />
+									</div>
+									<div class="form-group">
+										<label for="name">Product Name</label> <input type="text"
+											class="form-control" id="name" required name="name"
+											[(ngModel)]="selectedProduct.name"
+											(change)="contentChanged($event)">
+									</div>
+
+									<div class="form-group">
+										<label for="category">Category</label> <select
+											class="form-control" id="category" required name="category"
+											[(ngModel)]="selectedProduct.category"
+											(change)="contentChanged($event)">
+											<option *ngFor="let pow of categories" [value]="pow">{{pow}}</option>
+										</select>
+									</div>
+
+									<div class="form-group">
+										<label for="unitDesc">Unit Description</label> <select
+											class="form-control" id="unitDesc" required name="unitDesc"
+											[(ngModel)]="selectedProduct.unitDesc"
+											(change)="contentChanged($event)">
+											<option *ngFor="let unit of unitDescription" [value]="unit">{{unit}}</option>
+										</select>
+									</div>
+
+									<div class="form-group">
+										<label for="stockLocation">Stock Location</label> <select
+											class="form-control" id="stockLocation" required
+											name="stockLocation"
+											[(ngModel)]="selectedProduct.stockLocation"
+											(change)="contentChanged($event)">
+											<option *ngFor="let stockSegment of stockLocation"
+												[value]="stockSegment">{{stockSegment}}</option>
+										</select>
+									</div>
+
+									<div class="form-group">
+										<label for="manufacturer">Manufacturer</label> <input
+											type="text" class="form-control" id="manufacturer" required
+											name="manufacturer"
+											[(ngModel)]="selectedProduct.manufacturer"
+											(change)="contentChanged($event)">
+									</div>
+
+									<div class="form-group">
+										<label for="hsnacs">HSN ACS</label> <input type="text"
+											class="form-control" id="hsnacs" required name="hsnacs"
+											[(ngModel)]="selectedProduct.hsnacs"
+											(change)="contentChanged($event)">
+									</div>
+									<div class="form-group">
+										<label class="btn-primary" ngbButtonLabel> <input
+											type="checkbox" ngbButton [(ngModel)]="selectedProduct.active">
+											Middle
+										</label>
+									</div>
+								</form>
+							</div>
+						</td>
+						<div class="modal" id="successModal"
+							[style.display]="showSuccessModal ? 'block' : 'none'">
+							<div class="modal-dialog"
+								[style.display]="showSuccessModal ? 'block' : 'none'">
+								<div class="modal-content">
+									<!-- Modal body -->
+									<div class="modal-body">{{modalMessage}}</div>
+
+									<!-- Modal footer -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-success"
+											data-dismiss="modal" (click)="hideSuccessModal()">Ok</button>
+									</div>
+
+								</div>
+							</div>
+						</div>
+
+
+
+						<td colspan="1">
+
+
+							<div [hidden]="submitted">
+								<form (ngSubmit)="onSubmit()" #formTwo="ngForm">
+									<div class="form-group">
+										<label for="cost">Cost</label> <input type="number"
+											class="form-control" id="cost" required name="cost"
+											[(ngModel)]="selectedProduct.cost"
+											(change)="contentChanged($event)">
+									</div>
+									<div class="form-group">
+										<label for="mrp">MRP</label> <input type="number"
+											class="form-control" id="mrp" required name="mrp"
+											[(ngModel)]="selectedProduct.mrp"
+											(change)="contentChanged($event)">
+									</div>
+									<div class="form-group">
+										<label for="retailPrice">Retail Price</label> <input
+											type="number" class="form-control" id="retailPrice" required
+											name="retailPrice" [(ngModel)]="selectedProduct.retailPrice"
+											(change)="contentChanged($event)">
+									</div>
+									<div class="form-group">
+										<label for="wholesalePrice">Wholesale Price</label> <input
+											type="number" class="form-control" id="wholesalerPrice"
+											required name="wholesalerPrice"
+											[(ngModel)]="selectedProduct.wholesalerPrice"
+											(change)="contentChanged($event)">
+									</div>
+
+									<div class="form-group">
+										<label for="sgst">SGST</label> <input type="number"
+											class="form-control" id="sgst" required name="sgst"
+											[(ngModel)]="selectedProduct.sgst"
+											(change)="contentChanged($event)">
+									</div>
+
+									<div class="form-group">
+										<label for="cgst">CGST</label> <input type="number"
+											class="form-control" id="cgst" required name="cgst"
+											[(ngModel)]="selectedProduct.cgst"
+											(change)="contentChanged($event)">
+									</div>
+
+									<div class="form-group">
+										<label for="igst">IGST</label> <input type="number"
+											class="form-control" id="igst" required name="igst"
+											[(ngModel)]="selectedProduct.igst"
+											(change)="contentChanged($event)">
+									</div>
+								</form>
+							</div>
+
+						</td>
+						<td colspan="1">
+
+
+							<div [hidden]="submitted">
+								<form (ngSubmit)="onSubmit()" #formThree="ngForm">
+									<div class="form-group">
+										<button id="saveProductInfo" type="button"
+											class="btn btn-info btn-sm switch-btn"
+											[disabled]="disableSaveButton"
+											ng-class="{ 'btn-success' : !tc.switching, 'btn-disabled' : tc.switching }"
+											(click)="saveInfo()">Save</button>
+										<button id="resetProductInfo" type="button"
+											class="btn btn-info btn-sm switch-btn"
+											ng-class="{ 'btn-success' : !tc.switching, 'btn-disabled' : tc.switching }"
+											(click)="resetForm()">Reset</button>
+									</div>
+								</form>
+							</div>
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div [style.display]="showItemLevel ? 'none' : 'block'"
+			id="allItemLevel">
+			<p-table #dt [columns]="selectedColumns" [value]="productsList"
+				[paginator]="true" [rows]="10" selectionMode="single"
+				(onRowSelect)="itemsRowSelect($event)"
+				[(selection)]="selectedProduct"> <ng-template
+				pTemplate="caption">
+			<div style="text-align: left">
+				<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns"
+					optionLabel="header" selectedItemsLabel="{0} columns selected"
+					[style]="{minWidth: '200px'}" defaultLabel="Choose Columns"></p-multiSelect>
+			</div>
+			<div style="text-align: right">
+				<i class="fa fa-search" style="margin: 4px 4px 0 0"></i> <input
+					type="text" pInputText size="50" placeholder="Global Filter"
+					(input)="dt.filterGlobal($event.target.value, 'contains')"
+					style="width: auto">
+			</div>
+			</ng-template>
+			<div style="text-align: left">
+				<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns"
+					optionLabel="header" selectedItemsLabel="{0} columns selected"
+					[style]="{minWidth: '200px'}" defaultLabel="Choose Columns"></p-multiSelect>
+			</div>
+			<ng-template pTemplate="header" let-columns>
+			<tr>
+				<th *ngFor="let col of columns">{{col.header}}</th>
+			</tr>
+			<tr>
+				<th *ngFor="let col of columns" [ngSwitch]="col.field"><input
+					*ngSwitchCase="'code'" pInputText type="text"
+					(input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+					<input *ngSwitchCase="'name'" pInputText type="text"
+					(input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+					<p-multiSelect *ngSwitchCase="'category'"
+						[options]="categoryFilter"
+						(onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
+					<p-multiSelect *ngSwitchCase="'stockLocation'"
+						[options]="stockSegmentFilter"
+						(onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
+				</th>
+			</tr>
+			</ng-template> <ng-template pTemplate="body" let-rowData let-columns="columns">
+			<tr [pSelectableRow]="rowData">
+				<td *ngFor="let col of columns">{{rowData[col.field]}}</td>
+			</tr>
+			</ng-template> </p-table>
+		</div>
+	</div>
+</div>

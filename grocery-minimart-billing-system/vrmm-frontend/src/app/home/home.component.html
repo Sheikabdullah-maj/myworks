@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-sm navbar-dark navbar-fixed-top" style="background-color:mediumturquoise">
+	<!-- Links -->
+	<ul class="navbar-nav">
+		<li class="dropdown">
+			<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Product
+				<span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				<li><button class="btn btn-info" type="button"
+						(click)="loadChildComponent('app-product-info')">Product-Info
+					</button></li>
+			</ul>
+		</li>
+		<li>
+			<button (click)="logout()">Logout</button>
+		</li>
+	</ul>
+
+</nav>
+<div class="container-fluid" style="background-color: khaki">
+	<app-product-info *ngIf="(childComponent === 'app-product-info')"></app-product-info>
+</div>
